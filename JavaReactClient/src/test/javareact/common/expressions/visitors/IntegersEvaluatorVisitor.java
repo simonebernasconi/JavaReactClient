@@ -35,19 +35,17 @@ public class IntegersEvaluatorVisitor extends IntegersBaseVisitor<Value> {
 		int left = visit(ctx.intExpr(0)).intVal();
 		int right = visit(ctx.intExpr(1)).intVal();
 		if (ctx.op.getType() == IntegersParser.ADD) {
-			return new Value(left+right);
-//			//if (left > right) {
-//				//return new Value(true);
-//			} else {
-//				return new Value(false);
-//			}
+			if (left > right) {
+				return new Value(true);
+			} else {
+				return new Value(false);
+			}
 		} else {
-			return new Value(left-right);
-//			if (left > right) {
-//				return new Value(false);
-//			} else {
-//				return new Value(true);
-//			}
+			if (left > right) {
+				return new Value(false);
+			} else {
+				return new Value(true);
+			}
 		}
 	}
 
