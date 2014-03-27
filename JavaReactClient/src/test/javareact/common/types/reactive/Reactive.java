@@ -62,8 +62,6 @@ public abstract class Reactive implements Subscriber, ReactiveListenerInterface 
 		value = startingValue;
 		blocking = false;
 		hasValue = true;
-		System.out.println("Expression no block " + expression);
-		System.out.println("Value " + startingValue);
 		initValues();
 		subscribeAndAdvertise();
 	}
@@ -87,18 +85,13 @@ public abstract class Reactive implements Subscriber, ReactiveListenerInterface 
 		expressionHandler = new ExpressionsHandler(type, expression);
 		blocking = true;
 		hasValue = false;
-		System.out.println("Expression block: " + expression);
-		System.out.println("Expression handler: " + expressionHandler.extractVariableNames(type));
-
 		initValues();
 		subscribeAndAdvertise();
-		System.out.println("Expression block2: " + expression);
 
 	}
 
 	@Override
 	public synchronized void notifyValueChanged(EventPacket evPkt) {
-		System.out.println("eventpacket IN NOTIFYVALUECHANGED "+ evPkt);
 		// Update the data structures
 		// Contact the queue manager to obtain the list of changes that can be
 		// processed
@@ -147,7 +140,6 @@ public abstract class Reactive implements Subscriber, ReactiveListenerInterface 
 	 * Return true iff any data structure was modified.
 	 */
 	protected final boolean updateDataStructures(Collection<EventPacket> events) {
-		System.out.println("Update " + events);
 		boolean modified = false;
 		for (EventPacket evPkt : events) {
 			Event ev = evPkt.getEvent();
@@ -170,8 +162,6 @@ public abstract class Reactive implements Subscriber, ReactiveListenerInterface 
 
 	private final void initValues() {
 		for (String var : expressionHandler.extractVariableNames(type)) {
-			System.out.println("Var in initValues: " + var);
-
 			missingValues.add(var);
 		}
 	}
@@ -180,7 +170,6 @@ public abstract class Reactive implements Subscriber, ReactiveListenerInterface 
 		Set<Subscription> subs = expressionHandler.buildSubscriptions(type);
 		Advertisement adv = new Advertisement(name, Consts.hostName);
 		forwarder.advertise(adv, subs, isPublic);
-		System.out.println("Sending subscriptions " + subs);
 		forwarder.addSubscriptions(this, subs);
 	}
 
