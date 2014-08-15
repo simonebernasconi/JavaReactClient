@@ -1,18 +1,95 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp" >
+
+    
+    <TextView
+        android:id="@+id/tire"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:hint="Tire"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
-        android:id="@+id/reactValue"
+        android:id="@+id/tireText1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Car Application" />
+        android:layout_alignRight="@+id/tire"
+        android:layout_alignTop="@+id/tireLight1"
+        android:layout_toRightOf="@+id/tireLight1"
+        android:text="Anterior Left Tire OK" />
+
+    <ImageView
+        android:id="@+id/tireLight1"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_alignLeft="@+id/tire"
+        android:layout_below="@+id/tire"
+        android:layout_marginRight="20dp"
+        android:src="@drawable/green" />
+
+    <ImageView
+        android:id="@+id/tireLight2"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_alignLeft="@+id/tireLight1"
+        android:layout_below="@+id/tireText1"
+        android:src="@drawable/green" />
+
+    <TextView
+        android:id="@+id/tireText2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tireText1"
+        android:layout_alignRight="@+id/tireText1"
+        android:layout_below="@+id/tireText1"
+        android:text="Anterior Right Tire OK" />
+
+    <ImageView
+        android:id="@+id/tireLight4"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_alignLeft="@+id/tireLight3"
+        android:layout_below="@+id/tireText3"
+        android:src="@drawable/green" />
+
+    <TextView
+        android:id="@+id/tireText3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tireText4"
+        android:layout_below="@+id/tireText2"
+        android:text="Posterior Left Tire OK" />
+
+    <TextView
+        android:id="@+id/tireText4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tireText2"
+        android:layout_alignTop="@+id/tireLight4"
+        android:text="Posterior Right Tire OK" />
 
     <ImageView
         android:id="@+id/carOk"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/tireText4"
+        android:layout_marginTop="27dp"
+        android:layout_toRightOf="@+id/tireLight1"
         android:src="@drawable/car" />
 
-</LinearLayout>
+    <ImageView
+        android:id="@+id/tireLight3"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_alignLeft="@+id/tireLight2"
+        android:layout_below="@+id/tireText2"
+        android:src="@drawable/green" />
+
+</RelativeLayout>

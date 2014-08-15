@@ -5,58 +5,172 @@ import test.javareact.common.packets.content.Value;
 import test.javareact.common.types.reactive.ReactiveBool;
 import test.javareact.common.types.reactive.ReactiveFactory;
 import test.javareact.common.types.reactive.ReactiveListener;
+import test.javareact.common.types.reactive.ReactiveString;
 import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
 	ImageView image;
-	TextView tv;
+	ImageView tireLight1;
+	ImageView tireLight2;
+//	TextView TireTv;
+//	TextView BrakeTv;
+//	TextView StreetTv;
+	TextView tireText1;
+	TextView tireText2;
 	ReactiveBool react1;
 	ReactiveBool react2;
 	ReactiveBool react3;
 	ReactiveBool react4;
-	boolean tire1 = true;
-	boolean tire2 = true;
-	boolean tire3 = true;
-	boolean tire4 = true;
+	ReactiveBool reactBrake1;
+	ReactiveBool reactBrake2;
+	ReactiveBool reactBrake3;
+	ReactiveBool reactBrake4;
+	ReactiveBool reactStreet;
+	public boolean tire1;
+	public boolean tire2;
+	public boolean tire3;
+	public boolean tire4;
+	public boolean brake1;
+	public boolean brake2;
+	public boolean brake3;
+	public boolean brake4;
+	public boolean street;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		// tToast("onCreate");
+		// tire1 = true;
+		// tire2 = true;
+		// tire3 = true;
+		// tire4 = true;
 		setContentView(R.layout.activity_main);
 		image = (ImageView) findViewById(R.id.carOk);
-		tv = (TextView) findViewById(R.id.reactValue);
+//		TireTv = (TextView) findViewById(R.id.reactValue);
+//		BrakeTv = (TextView) findViewById(R.id.reactValue2);
+//		StreetTv = (TextView) findViewById(R.id.reactValue3);
+		tireText1 = (TextView) findViewById(R.id.tireText1);
+		tireText2 = (TextView) findViewById(R.id.tireText2);
+		tireLight1 = (ImageView) findViewById(R.id.tireLight1);
+		tireLight2 = (ImageView) findViewById(R.id.tireLight2);
 		new Thread(new ClientThread()).start();
 	}
 
+	
 	class ClientThread implements Runnable {
 
 		@Override
 		public void run() {
 			Consts.hostName = "android";
-			react1 = ReactiveFactory.getBool("Tire1.obTire1.get()", true, "");
+			react1 = ReactiveFactory.getBool("Tire1.ObTire1.get():Bool", false, "");
+			tire1 = react1.get();
 			react1.addReactiveListener(new Tire(react1, 1));
-
-			react2 = ReactiveFactory.getBool("Tire2.obTire2.get()", true, "");
+			
+			react2 = ReactiveFactory.getBool("Tire2.ObTire2.get():Bool", false, "");
+			tire2 = react2.get();
 			react2.addReactiveListener(new Tire(react2, 2));
 
-			react3 = ReactiveFactory.getBool("Tire3.obTire3.get()", true, "");
+			react3 = ReactiveFactory.getBool("Tire3.ObTire3.get():Bool", false, "");
+			tire3 = react3.get();
 			react3.addReactiveListener(new Tire(react3, 3));
 
-			react4 = ReactiveFactory.getBool("Tire4.obTire4.get()", true, "");
+			react4 = ReactiveFactory.getBool("Tire4.ObTire4.get():Bool", false, "");
+			tire4 = react4.get();
 			react4.addReactiveListener(new Tire(react4, 4));
+			
+//			reactBrake1 = ReactiveFactory.getBool("BrakeHigh1.BrakeHigh1.get():Bool", false, "");
+//			brake1 = reactBrake1.get();
+//			reactBrake1.addReactiveListener(new Brake(reactBrake1, 1));
+			
+//			reactStreet = ReactiveFactory.getBool("BrakeHigh1.BrakeHigh1.get():Bool", false, "");
+//			street = reactStreet.get();
+//			reactStreet.addReactiveListener(new Street(reactStreet));
 		}
 
 	}
 
+	@Override
+	public void onStart() {
+		super.onStart();
+		tToast("onStart");
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		tToast("onResume");
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+//			TireTv.setText("WARNING: Problem on " + extras.getString("Tire")
+//					+ "Tire!");
+			setImage(extras.getBoolean("Tire1"), extras.getBoolean("Tire2"),
+					extras.getBoolean("Tire3"), extras.getBoolean("Tire4"));
+		}
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		tToast("onPause");
+	}
+
+	@Override
+	public void onRestart() {
+		super.onRestart();
+		tToast("onRestart");
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+//			TireTv.setText("WARNING: Problem on " + extras.getString("Tire")
+//					+ "Tire!");
+			setImage(extras.getBoolean("Tire1"), extras.getBoolean("Tire2"),
+					extras.getBoolean("Tire3"), extras.getBoolean("Tire4"));
+		}
+	}
+
+	
+
+//	private class Street implements ReactiveListener {
+//		private final ReactiveBool reactive;
+//		
+//		Street(ReactiveBool reactive){
+//			this.reactive = reactive;
+//		}
+//
+//		@Override
+//		public void notifyReactiveChange(final Value value) {
+//			runOnUiThread(new Runnable() {
+//				@Override
+//				public void run() {
+//					//tv.setText(String.valueOf(value.boolVal()));
+//						if (reactive.get() == true) {
+//							StreetTv.setText("You are driving on a line");
+//							
+//						} else {
+//							StreetTv.setText("Curve");
+//							
+//						}
+//				}
+//			});
+//		}
+//
+//		@Override
+//		public void notifyReactiveUpdate(Value value) {
+//			// TODO Auto-generated method stub
+//		}
+//	}
+	
+	
 	private class Tire implements ReactiveListener {
 		private final ReactiveBool reactive;
 		private final int n;
@@ -64,6 +178,7 @@ public class MainActivity extends Activity {
 		Tire(ReactiveBool reactive, int n) {
 			this.reactive = reactive;
 			this.n = n;
+
 		}
 
 		@Override
@@ -71,78 +186,57 @@ public class MainActivity extends Activity {
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
+					//tv.setText(String.valueOf(value.boolVal()));
 					switch (n) {
 					case 1:
-						if (reactive.get() == false) {
-							tv.setText("WARNING: Problem on Anterior Left Tire!");
-							tire1 = false;
-							createNotification("Anterior Left");
-						} else {
+						if (reactive.get() == true) {
+							tireText1.setText("Anterior Left Tire WARNING!");
+							tireLight1.setImageResource(R.drawable.red);
 							tire1 = true;
+							createNotification("Anterior Left", tire1, tire2,
+									tire3, tire4);
+						} else {
+							tireText1.setText("Anterior Left Tire OK");
+							tireLight1.setImageResource(R.drawable.green);
+							tire1 = false;
 						}
 						break;
 					case 2:
-						if (reactive.get() == false) {
-							tv.setText("WARNING: Problem on Anterior Right Tire!");
-							tire2 = false;
-							createNotification("Anterior Right");
-						} else {
+						if (reactive.get() == true) {
+							tireText2.setText("Anterior Right Tire WARNING!");
+							tireLight2.setImageResource(R.drawable.red);
 							tire2 = true;
+							createNotification("Anterior Right", tire1, tire2,
+									tire3, tire4);
+						} else {
+							tireText2.setText("Anterior Right Tire OK");
+							tireLight2.setImageResource(R.drawable.green);
+							tire2 = false;
 						}
 						break;
 					case 3:
-						if (reactive.get() == false) {
-							tv.setText("WARNING: Problem on Posterior Left Tire!");
-							tire3 = false;
-							createNotification("Posterior Left");
-						} else {
+						if (reactive.get() == true) {
+							//TireTv.setText("WARNING: Problem on Posterior Left Tire!");
 							tire3 = true;
+							createNotification("Posterior Left", tire1, tire2,
+									tire3, tire4);
+						} else {
+							tire3 = false;
 						}
 						break;
 					case 4:
-						if (reactive.get() == false) {
-							tv.setText("WARNING: Problem on Posterior Right Tire!");
-							tire4 = false;
-							createNotification("Posterior Right");
-						} else {
+						if (reactive.get() == true) {
+							//TireTv.setText("WARNING: Problem on Posterior Right Tire!");
 							tire4 = true;
+							createNotification("Posterior Right", tire1, tire2,
+									tire3, tire4);
+						} else {
+							tire4 = false;
 						}
 						break;
 					}
 
-					if (tire1 && tire2 && tire3 && tire4) {
-						image.setImageResource(R.drawable.car);
-					} else if (!tire1 && tire2 && tire3 && tire4) {
-						image.setImageResource(R.drawable.car1);
-					} else if (!tire1 && !tire2 && tire3 && tire4) {
-						image.setImageResource(R.drawable.car12);
-					} else if (!tire1 && !tire2 && !tire3 && tire4) {
-						image.setImageResource(R.drawable.car123);
-					} else if (!tire1 && !tire2 && !tire3 && !tire4) {
-						image.setImageResource(R.drawable.car1234);
-					} else if (!tire1 && !tire2 && tire3 && !tire4) {
-						image.setImageResource(R.drawable.car124);
-					} else if (!tire1 && tire2 && !tire3 && tire4) {
-						image.setImageResource(R.drawable.car13);
-					} else if (!tire1 && tire2 && !tire3 && !tire4) {
-						image.setImageResource(R.drawable.car134);
-					} else if (!tire1 && tire2 && tire3 && !tire4) {
-						image.setImageResource(R.drawable.car14);
-					} else if (tire1 && !tire2 && tire3 && tire4) {
-						image.setImageResource(R.drawable.car2);
-					} else if (tire1 && !tire2 && !tire3 && tire4) {
-						image.setImageResource(R.drawable.car23);
-					} else if (tire1 && !tire2 && !tire3 && !tire4) {
-						image.setImageResource(R.drawable.car234);
-					} else if (tire1 && !tire2 && tire3 && !tire4) {
-						image.setImageResource(R.drawable.car24);
-					} else if (tire1 && tire2 && !tire3 && tire4) {
-						image.setImageResource(R.drawable.car3);
-					} else if (tire1 && tire2 && !tire3 && !tire4) {
-						image.setImageResource(R.drawable.car34);
-					} else if (tire1 && tire2 && tire3 && !tire4) {
-						image.setImageResource(R.drawable.car4);
-					}
+					setImage(tire1, tire2, tire3, tire4);
 				}
 			});
 		}
@@ -152,16 +246,216 @@ public class MainActivity extends Activity {
 			// TODO Auto-generated method stub
 		}
 	}
+	
+//	private class Brake implements ReactiveListener {
+//		private final ReactiveBool reactive;
+//		private final int n;
+//
+//		Brake(ReactiveBool reactive, int n) {
+//			this.reactive = reactive;
+//			this.n = n;
+//
+//		}
+//
+//		@Override
+//		public void notifyReactiveChange(final Value value) {
+//			runOnUiThread(new Runnable() {
+//				@Override
+//				public void run() {
+//					//tv.setText(String.valueOf(value.boolVal()));
+//					switch (n) {
+//					case 1:
+//						if (reactive.get() == true) {
+//							BrakeTv.setText("WARNING: Problem on Anterior Left Brake!");
+//							brake1 = true;
+//							
+////							createNotification("Anterior Left", brake1, brake2,
+////									brake3, brake4);
+//						} else {
+//							BrakeTv.setText("");
+//							brake1 = false;
+//						}
+//						break;
+//					case 2:
+//						if (reactive.get() == true) {
+//							BrakeTv.setText("WARNING: Problem on Anterior Right Brake!");
+//							brake2 = true;
+////							createNotification("Anterior Right", brake1, brake2,
+////									brake3, brake4);
+//						} else {
+//							brake2 = false;
+//						}
+//						break;
+//					case 3:
+//						if (reactive.get() == true) {
+//							BrakeTv.setText("WARNING: Problem on Posterior Left Brake!");
+//							brake3 = true;
+////							createNotification("Posterior Left",  brake1, brake2,
+////									brake3, brake4);
+//						} else {
+//							brake3 = false;
+//						}
+//						break;
+//					case 4:
+//						if (reactive.get() == true) {
+//							BrakeTv.setText("WARNING: Problem on Posterior Right Brake!");
+//							brake4 = true;
+////							createNotification("Posterior Right",  brake1, brake2,
+////									brake3, brake4);
+//						} else {
+//							brake4 = false;
+//						}
+//						break;
+//					}
+//
+////					setImage(tire1, tire2, tire3, tire4);
+//				}
+//			});
+//		}
+//
+//		@Override
+//		public void notifyReactiveUpdate(Value value) {
+//			// TODO Auto-generated method stub
+//		}
+//	}
 
-	public void createNotification(String string) {
-		Notification noti = new Notification.Builder(this)
-				.setContentTitle("Warning")
-				.setContentText("There is a problem on " + string + " tire!")
-				.setSmallIcon(R.drawable.icon_tire).build();
-		NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-		// hide the notification after its selected
-		noti.flags |= Notification.FLAG_AUTO_CANCEL;
-		notificationManager.notify(0, noti);
+	private void tToast(String s) {
+		Context context = getApplicationContext();
+		int duration = Toast.LENGTH_SHORT;
+		Toast toast = Toast.makeText(context, s, duration);
+		toast.show();
+	}
 
+	public void createNotification(String tire, boolean tire1, boolean tire2,
+			boolean tire3, boolean tire4) {
+
+		NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(
+				this.getApplicationContext());
+		notificationBuilder.setContentTitle("Warning");
+		notificationBuilder.setContentText("There is a problem on " + tire
+				+ " tire!");
+		notificationBuilder.setTicker("Warning!!");
+		notificationBuilder.setWhen(System.currentTimeMillis());
+		notificationBuilder.setSmallIcon(R.drawable.icon_tire);
+
+		Intent notificationIntent = new Intent(this.getApplicationContext(),
+				this.getClass()).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+				| Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		notificationIntent.putExtra("Tire", tire);
+		notificationIntent.putExtra("Tire1", tire1);
+		notificationIntent.putExtra("Tire2", tire2);
+		notificationIntent.putExtra("Tire3", tire3);
+		notificationIntent.putExtra("Tire4", tire4);
+		PendingIntent contentIntent = PendingIntent.getActivity(
+				this.getApplicationContext(), (int) (Math.random() * 100),
+				notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+		notificationBuilder.setContentIntent(contentIntent);
+
+		// Impostiamo il suono, le luci e la vibrazione di default
+		// notificationBuilder.setDefaults(Notification.DEFAULT_SOUND |
+		// Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE);
+		// System.out.println("sto per mostrare la notifica");
+
+		NotificationManager notificationManager = (NotificationManager) this
+				.getApplicationContext().getSystemService(
+						this.getApplicationContext().NOTIFICATION_SERVICE);
+		Notification notification = notificationBuilder.build();
+		notification.flags = Notification.DEFAULT_LIGHTS
+				| Notification.FLAG_AUTO_CANCEL;
+		notificationManager.notify(0, notification);
+		// System.out.println("notifica stampata");
+
+	}
+
+//	public void createNotification2(String string) {
+//
+//		Intent intent = new Intent(this, MainActivity.class);
+//		PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
+//
+//		Notification noti = new Notification.Builder(this)
+//				.setContentTitle("Warning")
+//				.setContentText("There is a problem on " + string + " tire!")
+//				.setSmallIcon(R.drawable.icon_tire).setContentIntent(pIntent)
+//				.build();
+//		NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//		// hide the notification after its selected
+//		noti.flags |= Notification.FLAG_AUTO_CANCEL;
+//		notificationManager.notify(0, noti);
+//
+//	}
+
+	public void setImageOld(boolean tire1, boolean tire2, boolean tire3,
+			boolean tire4) {
+		if (tire1 && tire2 && tire3 && tire4) {
+			image.setImageResource(R.drawable.car);
+		} else if (!tire1 && tire2 && tire3 && tire4) {
+			image.setImageResource(R.drawable.car1);
+		} else if (!tire1 && !tire2 && tire3 && tire4) {
+			image.setImageResource(R.drawable.car12);
+		} else if (!tire1 && !tire2 && !tire3 && tire4) {
+			image.setImageResource(R.drawable.car123);
+		} else if (!tire1 && !tire2 && !tire3 && !tire4) {
+			image.setImageResource(R.drawable.car1234);
+		} else if (!tire1 && !tire2 && tire3 && !tire4) {
+			image.setImageResource(R.drawable.car124);
+		} else if (!tire1 && tire2 && !tire3 && tire4) {
+			image.setImageResource(R.drawable.car13);
+		} else if (!tire1 && tire2 && !tire3 && !tire4) {
+			image.setImageResource(R.drawable.car134);
+		} else if (!tire1 && tire2 && tire3 && !tire4) {
+			image.setImageResource(R.drawable.car14);
+		} else if (tire1 && !tire2 && tire3 && tire4) {
+			image.setImageResource(R.drawable.car2);
+		} else if (tire1 && !tire2 && !tire3 && tire4) {
+			image.setImageResource(R.drawable.car23);
+		} else if (tire1 && !tire2 && !tire3 && !tire4) {
+			image.setImageResource(R.drawable.car234);
+		} else if (tire1 && !tire2 && tire3 && !tire4) {
+			image.setImageResource(R.drawable.car24);
+		} else if (tire1 && tire2 && !tire3 && tire4) {
+			image.setImageResource(R.drawable.car3);
+		} else if (tire1 && tire2 && !tire3 && !tire4) {
+			image.setImageResource(R.drawable.car34);
+		} else if (tire1 && tire2 && tire3 && !tire4) {
+			image.setImageResource(R.drawable.car4);
+		}
+	}
+
+	public void setImage(boolean tire1, boolean tire2, boolean tire3,
+			boolean tire4) {
+		if (!tire1 && !tire2 && !tire3 && !tire4) {
+			image.setImageResource(R.drawable.car);
+		} else if (tire1 && !tire2 && !tire3 && !tire4) {
+			image.setImageResource(R.drawable.car1);
+		} else if (tire1 && tire2 && !tire3 && !tire4) {
+			image.setImageResource(R.drawable.car12);
+		} else if (tire1 && tire2 && tire3 && !tire4) {
+			image.setImageResource(R.drawable.car123);
+		} else if (tire1 && tire2 && tire3 && tire4) {
+			image.setImageResource(R.drawable.car1234);
+		} else if (tire1 && tire2 && !tire3 && tire4) {
+			image.setImageResource(R.drawable.car124);
+		} else if (tire1 && !tire2 && tire3 && !tire4) {
+			image.setImageResource(R.drawable.car13);
+		} else if (tire1 && !tire2 && tire3 && tire4) {
+			image.setImageResource(R.drawable.car134);
+		} else if (tire1 && !tire2 && !tire3 && tire4) {
+			image.setImageResource(R.drawable.car14);
+		} else if (!tire1 && tire2 && !tire3 && !tire4) {
+			image.setImageResource(R.drawable.car2);
+		} else if (!tire1 && tire2 && tire3 && !tire4) {
+			image.setImageResource(R.drawable.car23);
+		} else if (!tire1 && tire2 && tire3 && tire4) {
+			image.setImageResource(R.drawable.car234);
+		} else if (!tire1 && tire2 && !tire3 && tire4) {
+			image.setImageResource(R.drawable.car24);
+		} else if (!tire1 && !tire2 && tire3 && !tire4) {
+			image.setImageResource(R.drawable.car3);
+		} else if (!tire1 && !tire2 && tire3 && tire4) {
+			image.setImageResource(R.drawable.car34);
+		} else if (!tire1 && !tire2 && !tire3 && tire4) {
+			image.setImageResource(R.drawable.car4);
+		}
 	}
 }

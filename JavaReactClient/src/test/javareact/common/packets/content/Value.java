@@ -1,6 +1,7 @@
 package test.javareact.common.packets.content;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class Value implements Serializable {
   private static final long serialVersionUID = -4909992361317067576L;
@@ -9,6 +10,7 @@ public class Value implements Serializable {
   private final double doubleVal;
   private final String stringVal;
   private final boolean boolVal;
+  private final List listVal;
   private final ValueType type;
 
   public Value(int val) {
@@ -16,6 +18,7 @@ public class Value implements Serializable {
     doubleVal = 0;
     stringVal = null;
     boolVal = false;
+    listVal = null;
     type = ValueType.INT;
   }
 
@@ -24,6 +27,7 @@ public class Value implements Serializable {
     doubleVal = val;
     stringVal = null;
     boolVal = false;
+    listVal = null;
     type = ValueType.DOUBLE;
   }
 
@@ -32,6 +36,7 @@ public class Value implements Serializable {
     doubleVal = 0;
     stringVal = val;
     boolVal = false;
+    listVal = null;
     type = ValueType.STRING;
   }
 
@@ -40,10 +45,21 @@ public class Value implements Serializable {
     doubleVal = 0;
     stringVal = null;
     boolVal = val;
+    listVal = null;
     type = ValueType.BOOL;
   }
+  
+  public Value(List<?> val) {
+	    intVal = 0;
+	    doubleVal = 0;
+	    stringVal = null;
+	    boolVal = false;
+	    listVal = val;
+	    type = ValueType.LIST;
+	  }
 
-  public final ValueType getType() {
+
+public final ValueType getType() {
     return type;
   }
 
@@ -52,7 +68,10 @@ public class Value implements Serializable {
   }
 
   public final double doubleVal() {
-    return doubleVal;
+    if (type == ValueType.INT){ 
+	  return (double)intVal;
+    }
+    else return doubleVal; 
   }
 
   public final String stringVal() {
@@ -62,6 +81,10 @@ public class Value implements Serializable {
   public final boolean boolVal() {
     return boolVal;
   }
+  
+  public final List listVal() {
+	    return listVal;
+	  }
 
   @Override
   public int hashCode() {
@@ -122,6 +145,8 @@ public class Value implements Serializable {
       return stringVal;
     case BOOL:
       return String.valueOf(boolVal);
+    case LIST:
+	      return listVal.toString(); 
     default:
       assert false : type;
       return "err";

@@ -6,28 +6,15 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
-import test.javareact.common.expressions.antlr_grammars.BoolsParser;
-import test.javareact.common.expressions.antlr_grammars.DoublesParser;
-import test.javareact.common.expressions.antlr_grammars.IntegersLexer;
-import test.javareact.common.expressions.antlr_grammars.IntegersParser;
-import test.javareact.common.expressions.antlr_grammars.StringsParser;
-import test.javareact.common.expressions.visitors.BoolsEvaluatorVisitor;
-import test.javareact.common.expressions.visitors.BoolsIdentifiersExtractorVisitor;
-import test.javareact.common.expressions.visitors.BoolsSubscriptionsGeneratorVisitor;
-import test.javareact.common.expressions.visitors.DoublesEvaluatorVisitor;
-import test.javareact.common.expressions.visitors.DoublesIdentifiersExtractorVisitor;
-import test.javareact.common.expressions.visitors.DoublesSubscriptionsGeneratorVisitor;
-import test.javareact.common.expressions.visitors.IntegersEvaluatorVisitor;
-import test.javareact.common.expressions.visitors.IntegersIdentifiersExtractorVisitor;
-import test.javareact.common.expressions.visitors.IntegersSubscriptionsGeneratorVisitor;
-import test.javareact.common.expressions.visitors.StringsEvaluatorVisitor;
-import test.javareact.common.expressions.visitors.StringsIdentifiersExtractorVisitor;
-import test.javareact.common.expressions.visitors.StringsSubscriptionsGeneratorVisitor;
+import test.javareact.common.expressions.antlr_grammars.ExpressionLexer;
+import test.javareact.common.expressions.antlr_grammars.ExpressionParser;
+import test.javareact.common.expressions.visitors.ExpressionsEvaluatorVisitor;
+import test.javareact.common.expressions.visitors.ExpressionsIdentifiersExtractorVisitor;
+import test.javareact.common.expressions.visitors.ExpressionsSubscriptionsGeneratorVisitor;
 import test.javareact.common.packets.content.Subscription;
 import test.javareact.common.packets.content.Value;
 import test.javareact.common.types.Types;
@@ -37,25 +24,29 @@ public class ExpressionsHandler {
 
   public ExpressionsHandler(Types type, String expression) {
     ANTLRInputStream input = new ANTLRInputStream(expression);
-    IntegersLexer lexer = new IntegersLexer(input);
+    ExpressionLexer lexer = new ExpressionLexer(input);
     CommonTokenStream tokens = new CommonTokenStream(lexer);
     switch (type) {
     case INT:
-      IntegersParser integersParser = new IntegersParser(tokens);
+      ExpressionParser integersParser = new ExpressionParser(tokens);
       parseTree = integersParser.start();
       break;
     case DOUBLE:
-      DoublesParser doublesParser = new DoublesParser(tokens);
+      ExpressionParser doublesParser = new ExpressionParser(tokens);
       parseTree = doublesParser.start();
       break;
     case BOOL:
-      BoolsParser boolParser = new BoolsParser(tokens);
+      ExpressionParser boolParser = new ExpressionParser(tokens);
       parseTree = boolParser.start();
       break;
     case STRING:
-      StringsParser stringParser = new StringsParser(tokens);
+      ExpressionParser stringParser = new ExpressionParser(tokens);
       parseTree = stringParser.start();
       break;
+    case LIST:
+        ExpressionParser listParser = new ExpressionParser(tokens);
+        parseTree = listParser.start();
+        break;
     default:
       assert false : type;
       parseTree = null;
@@ -65,21 +56,25 @@ public class ExpressionsHandler {
   public final Set<Subscription> buildSubscriptions(Types type) {
     switch (type) {
     case INT:
-      IntegersSubscriptionsGeneratorVisitor intVisitor = new IntegersSubscriptionsGeneratorVisitor();
+      ExpressionsSubscriptionsGeneratorVisitor intVisitor = new ExpressionsSubscriptionsGeneratorVisitor();
       intVisitor.visit(parseTree);
       return intVisitor.getSubscriptions();
     case DOUBLE:
-      DoublesSubscriptionsGeneratorVisitor doubleVisitor = new DoublesSubscriptionsGeneratorVisitor();
+      ExpressionsSubscriptionsGeneratorVisitor doubleVisitor = new ExpressionsSubscriptionsGeneratorVisitor();
       doubleVisitor.visit(parseTree);
       return doubleVisitor.getSubscriptions();
     case BOOL:
-      BoolsSubscriptionsGeneratorVisitor boolVisitor = new BoolsSubscriptionsGeneratorVisitor();
+      ExpressionsSubscriptionsGeneratorVisitor boolVisitor = new ExpressionsSubscriptionsGeneratorVisitor();
       boolVisitor.visit(parseTree);
       return boolVisitor.getSubscriptions();
     case STRING:
-      StringsSubscriptionsGeneratorVisitor stringVisitor = new StringsSubscriptionsGeneratorVisitor();
+      ExpressionsSubscriptionsGeneratorVisitor stringVisitor = new ExpressionsSubscriptionsGeneratorVisitor();
       stringVisitor.visit(parseTree);
       return stringVisitor.getSubscriptions();
+    case LIST:
+    	ExpressionsSubscriptionsGeneratorVisitor listVisitor = new ExpressionsSubscriptionsGeneratorVisitor();
+        listVisitor.visit(parseTree);
+        return listVisitor.getSubscriptions();
     default:
       assert false : type;
       return new HashSet<Subscription>();
@@ -89,21 +84,25 @@ public class ExpressionsHandler {
   public final Collection<String> extractVariableNames(Types type) {
     switch (type) {
     case INT:
-      IntegersIdentifiersExtractorVisitor intVisitor = new IntegersIdentifiersExtractorVisitor();
+      ExpressionsIdentifiersExtractorVisitor intVisitor = new ExpressionsIdentifiersExtractorVisitor();
       intVisitor.visit(parseTree);
       return intVisitor.getIdentifiers();
     case DOUBLE:
-      DoublesIdentifiersExtractorVisitor doubleVisitor = new DoublesIdentifiersExtractorVisitor();
+      ExpressionsIdentifiersExtractorVisitor doubleVisitor = new ExpressionsIdentifiersExtractorVisitor();
       doubleVisitor.visit(parseTree);
       return doubleVisitor.getIdentifiers();
     case BOOL:
-      BoolsIdentifiersExtractorVisitor boolVisitor = new BoolsIdentifiersExtractorVisitor();
+      ExpressionsIdentifiersExtractorVisitor boolVisitor = new ExpressionsIdentifiersExtractorVisitor();
       boolVisitor.visit(parseTree);
       return boolVisitor.getIdentifiers();
     case STRING:
-      StringsIdentifiersExtractorVisitor stringVisitor = new StringsIdentifiersExtractorVisitor();
+      ExpressionsIdentifiersExtractorVisitor stringVisitor = new ExpressionsIdentifiersExtractorVisitor();
       stringVisitor.visit(parseTree);
       return stringVisitor.getIdentifiers();
+    case LIST:
+        ExpressionsIdentifiersExtractorVisitor listVisitor = new ExpressionsIdentifiersExtractorVisitor();
+        listVisitor.visit(parseTree);
+        return listVisitor.getIdentifiers();
     default:
       assert false : type;
       return new ArrayList<String>();
@@ -113,17 +112,20 @@ public class ExpressionsHandler {
   public final Value evaluateExpression(Map<String, Value> values, Types type) {
     switch (type) {
     case INT:
-      IntegersEvaluatorVisitor intVisitor = new IntegersEvaluatorVisitor(values);
+      ExpressionsEvaluatorVisitor intVisitor = new ExpressionsEvaluatorVisitor(values);
       return intVisitor.visit(parseTree);
     case DOUBLE:
-      DoublesEvaluatorVisitor doubleVisitor = new DoublesEvaluatorVisitor(values);
+      ExpressionsEvaluatorVisitor doubleVisitor = new ExpressionsEvaluatorVisitor(values);
       return doubleVisitor.visit(parseTree);
     case BOOL:
-      BoolsEvaluatorVisitor boolVisitor = new BoolsEvaluatorVisitor(values);
+      ExpressionsEvaluatorVisitor boolVisitor = new ExpressionsEvaluatorVisitor(values);
       return boolVisitor.visit(parseTree);
     case STRING:
-      StringsEvaluatorVisitor strVisitor = new StringsEvaluatorVisitor(values);
+      ExpressionsEvaluatorVisitor strVisitor = new ExpressionsEvaluatorVisitor(values);
       return strVisitor.visit(parseTree);
+    case LIST:
+        ExpressionsEvaluatorVisitor listVisitor = new ExpressionsEvaluatorVisitor(values);
+        return listVisitor.visit(parseTree);
     default:
       assert false : type;
       return null;
