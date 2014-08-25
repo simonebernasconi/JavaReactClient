@@ -111,7 +111,6 @@ public class ClientEventForwarder implements PacketForwarder {
     logger.fine("Adding subscriptions " + subscriptions);
     subTable.addSubscriptions(subscriber, subscriptions);
     Set<Subscription> subsToSendToServer = getSubscriptionsToForwardToServer(subscriptions);
-    System.out.println("Sbscriptions to send to the server " + subsToSendToServer);
     connectionManager.sendSubscription(subsToSendToServer);
   }
 
@@ -164,5 +163,4 @@ public class ClientEventForwarder implements PacketForwarder {
       }
     }
   }
-
 }

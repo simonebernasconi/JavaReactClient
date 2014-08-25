@@ -95,5 +95,4 @@ final class ClientSubscriptionTable {
   public String toString() {
     return "ClientSubscriptionTable [\n subs=" + subs + "\n serverSubscriptions=" + serverSubscriptions + "\n]";
   }
-
 }

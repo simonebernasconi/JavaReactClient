@@ -14,8 +14,8 @@ public class RemoteReactiveBlocking {
     ReactiveString react3 = ReactiveFactory.getString("Remote.obString1.get() + Remote.obString2.get()", "react3");
 
     while (true) {
-      System.out.println("React1: " + react1.getInt());
-      System.out.println("React2: " + react2.getInt());
+      System.out.println("React1: " + react1.get());
+      System.out.println("React2: " + react2.get());
       System.out.println("React3: " + react3.get());
       try {
         Thread.sleep(500);

@@ -1,6 +1,8 @@
 package test.javareact.common.packets.content;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class Value implements Serializable {
@@ -10,8 +12,8 @@ public class Value implements Serializable {
   private final double doubleVal;
   private final String stringVal;
   private final boolean boolVal;
-  private final List listVal;
-  private final ValueType type;
+  private List listVal;
+  private  ValueType type;
 
   public Value(int val) {
     intVal = val;
@@ -57,8 +59,8 @@ public class Value implements Serializable {
 	    listVal = val;
 	    type = ValueType.LIST;
 	  }
-
-
+	
+  
 public final ValueType getType() {
     return type;
   }
@@ -85,56 +87,57 @@ public final ValueType getType() {
   public final List listVal() {
 	    return listVal;
 	  }
+  
 
-  @Override
-  public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + (boolVal ? 1231 : 1237);
-    long temp;
-    temp = Double.doubleToLongBits(doubleVal);
-    result = prime * result + (int) (temp ^ (temp >>> 32));
-    result = prime * result + intVal;
-    result = prime * result + ((stringVal == null) ? 0 : stringVal.hashCode());
-    result = prime * result + ((type == null) ? 0 : type.hashCode());
-    return result;
-  }
 
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj) {
-      return true;
-    }
-    if (obj == null) {
-      return false;
-    }
-    if (!(obj instanceof Value)) {
-      return false;
-    }
-    Value other = (Value) obj;
-    if (boolVal != other.boolVal) {
-      return false;
-    }
-    if (Double.doubleToLongBits(doubleVal) != Double.doubleToLongBits(other.doubleVal)) {
-      return false;
-    }
-    if (intVal != other.intVal) {
-      return false;
-    }
-    if (stringVal == null) {
-      if (other.stringVal != null) {
-        return false;
-      }
-    } else if (!stringVal.equals(other.stringVal)) {
-      return false;
-    }
-    if (type != other.type) {
-      return false;
-    }
-    return true;
-  }
 
-  @Override
+@Override
+public int hashCode() {
+	final int prime = 31;
+	int result = 1;
+	result = prime * result + (boolVal ? 1231 : 1237);
+	long temp;
+	temp = Double.doubleToLongBits(doubleVal);
+	result = prime * result + (int) (temp ^ (temp >>> 32));
+	result = prime * result + intVal;
+	result = prime * result + ((listVal == null) ? 0 : listVal.hashCode());
+	result = prime * result + ((stringVal == null) ? 0 : stringVal.hashCode());
+	result = prime * result + ((type == null) ? 0 : type.hashCode());
+	return result;
+}
+
+@Override
+public boolean equals(Object obj) {
+	if (this == obj)
+		return true;
+	if (obj == null)
+		return false;
+	if (getClass() != obj.getClass())
+		return false;
+	Value other = (Value) obj;
+	if (boolVal != other.boolVal)
+		return false;
+	if (Double.doubleToLongBits(doubleVal) != Double
+			.doubleToLongBits(other.doubleVal))
+		return false;
+	if (intVal != other.intVal)
+		return false;
+	if (listVal == null) {
+		if (other.listVal != null)
+			return false;
+	} else if (!listVal.equals(other.listVal))
+		return false;
+	if (stringVal == null) {
+		if (other.stringVal != null)
+			return false;
+	} else if (!stringVal.equals(other.stringVal))
+		return false;
+	if (type != other.type)
+		return false;
+	return true;
+}
+
+@Override
   public String toString() {
     switch (type) {
     case INT:
@@ -146,11 +149,13 @@ public final ValueType getType() {
     case BOOL:
       return String.valueOf(boolVal);
     case LIST:
-	      return listVal.toString(); 
+      return listVal.toString(); 
     default:
       assert false : type;
       return "err";
     }
   }
+
+
 
 }

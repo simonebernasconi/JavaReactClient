@@ -10,9 +10,7 @@ public interface ReactiveInteger extends ReactiveListenerInterface {
    * 
    * @return the value of the variable.
    */
-  public int getInt();
-  
-  public boolean getBool();
+  public int get();
   
 
 }

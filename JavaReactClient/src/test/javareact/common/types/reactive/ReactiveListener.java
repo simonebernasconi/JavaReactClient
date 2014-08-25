@@ -7,6 +7,6 @@ public interface ReactiveListener {
 	
 	public void notifyReactiveChange(Value value);
 	
-	public void notifyReactiveUpdate(Value value);
+//	public void notifyReactiveUpdate(Value value);
 	
 }

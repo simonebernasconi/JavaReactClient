@@ -16,15 +16,10 @@ final class ReactiveIntegerImpl extends Reactive implements ReactiveInteger {
 
 
 @Override
-public int getInt() {
+public int get() {
 	requiresUpdatedValue();
     return value.intVal();
 }
 
-@Override
-public boolean getBool() {
-	requiresUpdatedValue();
-    return value.boolVal();
-}
 
 }

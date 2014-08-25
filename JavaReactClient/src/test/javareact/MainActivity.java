@@ -23,29 +23,30 @@ public class MainActivity extends Activity {
 	ImageView image;
 	ImageView tireLight1;
 	ImageView tireLight2;
-//	TextView TireTv;
-//	TextView BrakeTv;
-//	TextView StreetTv;
+	ImageView tireLight3;
+	ImageView tireLight4;
 	TextView tireText1;
 	TextView tireText2;
+	TextView tireText3;
+	TextView tireText4;
 	ReactiveBool react1;
 	ReactiveBool react2;
 	ReactiveBool react3;
 	ReactiveBool react4;
-	ReactiveBool reactBrake1;
-	ReactiveBool reactBrake2;
-	ReactiveBool reactBrake3;
-	ReactiveBool reactBrake4;
-	ReactiveBool reactStreet;
+//	ReactiveBool reactBrake1;
+//	ReactiveBool reactBrake2;
+//	ReactiveBool reactBrake3;
+//	ReactiveBool reactBrake4;
+//	ReactiveBool reactStreet;
 	public boolean tire1;
 	public boolean tire2;
 	public boolean tire3;
 	public boolean tire4;
-	public boolean brake1;
-	public boolean brake2;
-	public boolean brake3;
-	public boolean brake4;
-	public boolean street;
+//	public boolean brake1;
+//	public boolean brake2;
+//	public boolean brake3;
+//	public boolean brake4;
+//	public boolean street;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -62,8 +63,12 @@ public class MainActivity extends Activity {
 //		StreetTv = (TextView) findViewById(R.id.reactValue3);
 		tireText1 = (TextView) findViewById(R.id.tireText1);
 		tireText2 = (TextView) findViewById(R.id.tireText2);
+		tireText3 = (TextView) findViewById(R.id.tireText3);
+		tireText4 = (TextView) findViewById(R.id.tireText4);
 		tireLight1 = (ImageView) findViewById(R.id.tireLight1);
 		tireLight2 = (ImageView) findViewById(R.id.tireLight2);
+		tireLight3 = (ImageView) findViewById(R.id.tireLight3);
+		tireLight4 = (ImageView) findViewById(R.id.tireLight4);
 		new Thread(new ClientThread()).start();
 	}
 
@@ -72,30 +77,22 @@ public class MainActivity extends Activity {
 
 		@Override
 		public void run() {
-			Consts.hostName = "android";
-			react1 = ReactiveFactory.getBool("Tire1.ObTire1.get():Bool", false, "");
+			Consts.hostName = "TiresCondition";
+			react1 = ReactiveFactory.getBool("((TirePressureAL.ObTirePressureAL.firstElement():ListDouble * 1.1) < TirePressureAL.ObTirePressureAL.lastElement():ListDouble) | ((TirePressureAL.ObTirePressureAL.firstElement():ListDouble * 0.8) > TirePressureAL.ObTirePressureAL.lastElement():ListDouble)", false, "WrongPressureAL");
 			tire1 = react1.get();
 			react1.addReactiveListener(new Tire(react1, 1));
 			
-			react2 = ReactiveFactory.getBool("Tire2.ObTire2.get():Bool", false, "");
+			react2 = ReactiveFactory.getBool("((TirePressureAR.ObTirePressureAR.firstElement():ListDouble * 1.1) < TirePressureAR.ObTirePressureAR.lastElement():ListDouble) | ((TirePressureAR.ObTirePressureAR.firstElement():ListDouble * 0.8) > TirePressureAR.ObTirePressureAR.lastElement():ListDouble)", false, "WrongPressureAR");
 			tire2 = react2.get();
 			react2.addReactiveListener(new Tire(react2, 2));
 
-			react3 = ReactiveFactory.getBool("Tire3.ObTire3.get():Bool", false, "");
+			react3 = ReactiveFactory.getBool("((TirePressurePL.ObTirePressurePL.firstElement():ListDouble * 1.1) < TirePressurePL.ObTirePressurePL.lastElement():ListDouble) | ((TirePressurePL.ObTirePressurePL.firstElement():ListDouble * 0.8) > TirePressurePL.ObTirePressurePL.lastElement():ListDouble)", false, "WrongPressurePL");
 			tire3 = react3.get();
 			react3.addReactiveListener(new Tire(react3, 3));
 
-			react4 = ReactiveFactory.getBool("Tire4.ObTire4.get():Bool", false, "");
+			react4 = ReactiveFactory.getBool("((TirePressurePR.ObTirePressurePR.firstElement():ListDouble * 1.1) < TirePressurePR.ObTirePressurePR.lastElement():ListDouble) | ((TirePressurePR.ObTirePressurePR.firstElement():ListDouble * 0.8) > TirePressurePR.ObTirePressurePR.lastElement():ListDouble)", false, "WrongPressurePR");
 			tire4 = react4.get();
 			react4.addReactiveListener(new Tire(react4, 4));
-			
-//			reactBrake1 = ReactiveFactory.getBool("BrakeHigh1.BrakeHigh1.get():Bool", false, "");
-//			brake1 = reactBrake1.get();
-//			reactBrake1.addReactiveListener(new Brake(reactBrake1, 1));
-			
-//			reactStreet = ReactiveFactory.getBool("BrakeHigh1.BrakeHigh1.get():Bool", false, "");
-//			street = reactStreet.get();
-//			reactStreet.addReactiveListener(new Street(reactStreet));
 		}
 
 	}
@@ -216,21 +213,27 @@ public class MainActivity extends Activity {
 						break;
 					case 3:
 						if (reactive.get() == true) {
-							//TireTv.setText("WARNING: Problem on Posterior Left Tire!");
+							tireText3.setText("Posterior Left Tire WARNING!");
+							tireLight3.setImageResource(R.drawable.red);
 							tire3 = true;
 							createNotification("Posterior Left", tire1, tire2,
 									tire3, tire4);
 						} else {
+							tireText3.setText("Posterior Left Tire OK");
+							tireLight3.setImageResource(R.drawable.green);
 							tire3 = false;
 						}
 						break;
 					case 4:
 						if (reactive.get() == true) {
-							//TireTv.setText("WARNING: Problem on Posterior Right Tire!");
+							tireText4.setText("Posterior Right Tire WARNING!");
+							tireLight4.setImageResource(R.drawable.red);
 							tire4 = true;
 							createNotification("Posterior Right", tire1, tire2,
 									tire3, tire4);
 						} else {
+							tireText4.setText("Posterior Right Tire OK");
+							tireLight4.setImageResource(R.drawable.green);
 							tire4 = false;
 						}
 						break;
@@ -241,10 +244,6 @@ public class MainActivity extends Activity {
 			});
 		}
 
-		@Override
-		public void notifyReactiveUpdate(Value value) {
-			// TODO Auto-generated method stub
-		}
 	}
 	
 //	private class Brake implements ReactiveListener {
